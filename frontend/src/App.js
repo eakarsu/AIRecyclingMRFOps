@@ -42,6 +42,22 @@ import AIBaleQualityGradePage         from './pages/AIBaleQualityGradePage';
 import AIRegulatoryReportingPage      from './pages/AIRegulatoryReportingPage';
 import AIScrapMarketBriefPage         from './pages/AIScrapMarketBriefPage';
 
+// Pass 7 — backlog CRUD pages
+import ProducersPage       from './pages/ProducersPage';
+import SkuObligationsPage  from './pages/SkuObligationsPage';
+import EprFilingsPage      from './pages/EprFilingsPage';
+import ScaleTicketsPage    from './pages/ScaleTicketsPage';
+import RoutesPage          from './pages/RoutesPage';
+import RouteStopsPage      from './pages/RouteStopsPage';
+import BuyersPage          from './pages/BuyersPage';
+import BuyerSpecsPage      from './pages/BuyerSpecsPage';
+
+// Pass 7 — backlog AI pages
+import AILineCameraAnomalyNarratePage from './pages/AILineCameraAnomalyNarratePage';
+import AIThroughputForecastPage       from './pages/AIThroughputForecastPage';
+import AIEndMarketMatchPage           from './pages/AIEndMarketMatchPage';
+import AIContaminationReportCardPage  from './pages/AIContaminationReportCardPage';
+
 // Admin
 import WebhooksPage from './pages/WebhooksPage';
 
@@ -52,6 +68,9 @@ import LoginPage from './pages/LoginPage';
 import { getToken } from './services/api';
 
 import './App.css';
+
+import CodexCustomVizFeature from './pages/CodexCustomVizFeature';
+import CodexOperationsFeature from './pages/CodexOperationsFeature';
 
 function RequireAuth({ children }) {
   const location = useLocation();
@@ -69,6 +88,9 @@ function ShellRoutes() {
         <Topbar />
         <div style={{ padding: '24px 32px' }}>
           <Routes>
+        <Route path="/codex/custom-viz" element={<CodexCustomVizFeature />} />
+        <Route path="/codex/operations" element={<CodexOperationsFeature />} />
+
             <Route path="/" element={<Dashboard />} />
 
             {/* 18 CRUD routes */}
@@ -108,6 +130,22 @@ function ShellRoutes() {
             <Route path="/ai/bale-quality-grade"         element={<AIBaleQualityGradePage />} />
             <Route path="/ai/regulatory-reporting"       element={<AIRegulatoryReportingPage />} />
             <Route path="/ai/scrap-market-brief"         element={<AIScrapMarketBriefPage />} />
+
+            {/* Pass 7 — backlog CRUD routes */}
+            <Route path="/producers"        element={<ProducersPage />} />
+            <Route path="/sku-obligations"  element={<SkuObligationsPage />} />
+            <Route path="/epr-filings"      element={<EprFilingsPage />} />
+            <Route path="/scale-tickets"    element={<ScaleTicketsPage />} />
+            <Route path="/routes"           element={<RoutesPage />} />
+            <Route path="/route-stops"      element={<RouteStopsPage />} />
+            <Route path="/buyers"           element={<BuyersPage />} />
+            <Route path="/buyer-specs"      element={<BuyerSpecsPage />} />
+
+            {/* Pass 7 — backlog AI routes */}
+            <Route path="/ai/line-camera-anomaly-narrate" element={<AILineCameraAnomalyNarratePage />} />
+            <Route path="/ai/throughput-forecast"         element={<AIThroughputForecastPage />} />
+            <Route path="/ai/end-market-match"            element={<AIEndMarketMatchPage />} />
+            <Route path="/ai/contamination-report-card"   element={<AIContaminationReportCardPage />} />
 
             <Route path="/webhooks" element={<WebhooksPage />} />
             <Route path="/custom-views" element={<CustomViewsPage />} />

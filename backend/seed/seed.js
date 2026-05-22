@@ -41,11 +41,25 @@ async function run() {
       DROP TABLE IF EXISTS webhooks           CASCADE;
       DROP TABLE IF EXISTS webhook_deliveries CASCADE;
       DROP TABLE IF EXISTS ai_results         CASCADE;
+
+      DROP TABLE IF EXISTS producers          CASCADE;
+      DROP TABLE IF EXISTS sku_obligations    CASCADE;
+      DROP TABLE IF EXISTS epr_filings        CASCADE;
+      DROP TABLE IF EXISTS scale_tickets      CASCADE;
+      DROP TABLE IF EXISTS routes             CASCADE;
+      DROP TABLE IF EXISTS route_stops        CASCADE;
+      DROP TABLE IF EXISTS buyers             CASCADE;
+      DROP TABLE IF EXISTS buyer_specs        CASCADE;
     `);
 
     console.log('[seed] applying migrations...');
     const schema = fs.readFileSync(path.join(__dirname, '..', 'migrations', '001_schema.sql'), 'utf8');
     await client.query(schema);
+    const schema2Path = path.join(__dirname, '..', 'migrations', '002_pass7_backlog.sql');
+    if (fs.existsSync(schema2Path)) {
+      const schema2 = fs.readFileSync(schema2Path, 'utf8');
+      await client.query(schema2);
+    }
 
     // ─────────────────────────────────────────────
     // RBAC users (3)

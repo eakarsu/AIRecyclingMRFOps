@@ -408,6 +408,196 @@ const SAMPLES = {
     { label: 'Metals focus', values: { focus: 'metals', recent_prices_notes: 'Aluminum UBC, steel cans — LME spot context.' } },
     { label: 'Export / Asia channel', values: { focus: 'export', recent_prices_notes: 'Focus on Asia export markets and impact of any National Sword-style restrictions.' } },
   ],
+
+  // ─────────────── Pass 7 additions ───────────────
+  'line-camera-anomaly-narrate': [
+    {
+      label: 'LINE-01 — lithium battery + propane burst',
+      values: {
+        line_id: 'LINE-01',
+        operator_notes: 'Operator reports thermal pop near infeed; AMP vision tagged Li-ion cell at 07:14:32.',
+        frame_events_json: JSON.stringify([
+          { ts: '07:14:30', object: 'lithium_ion_cell', confidence: 0.96 },
+          { ts: '07:14:31', object: 'propane_cylinder', confidence: 0.89 },
+          { ts: '07:14:32', object: 'thermal_event', confidence: 0.74 },
+        ], null, 2),
+      },
+    },
+    {
+      label: 'LINE-02 — film + plastic bag burst (fiber line)',
+      values: {
+        line_id: 'LINE-02',
+        operator_notes: 'OCC screen jamming; high film count from commercial route.',
+        frame_events_json: JSON.stringify([
+          { ts: '11:02:10', object: 'plastic_film', confidence: 0.94, share: 0.18 },
+          { ts: '11:02:12', object: 'plastic_film', confidence: 0.93, share: 0.21 },
+          { ts: '11:02:15', object: 'shrink_wrap',  confidence: 0.88, share: 0.09 },
+        ], null, 2),
+      },
+    },
+    {
+      label: 'LINE-03 — robotics misfire window',
+      values: {
+        line_id: 'LINE-03',
+        operator_notes: 'AMP Cortex arm B underpicking residual; suspect calibration drift.',
+        frame_events_json: JSON.stringify([
+          { ts: '14:30:05', object: 'pet_bottle_missed', confidence: 0.81 },
+          { ts: '14:30:09', object: 'pet_bottle_missed', confidence: 0.78 },
+          { ts: '14:30:14', object: 'alu_can_missed',    confidence: 0.83 },
+        ], null, 2),
+      },
+    },
+    {
+      label: 'LINE-04 — glass breakage spike',
+      values: {
+        line_id: 'LINE-04',
+        operator_notes: 'Glass cleanup system overflowing; high small-cullet share.',
+        frame_events_json: JSON.stringify([
+          { ts: '09:11:00', object: 'glass_fines',  confidence: 0.92, share: 0.34 },
+          { ts: '09:11:05', object: 'ceramic',      confidence: 0.71 },
+          { ts: '09:11:10', object: 'mixed_paper_contaminated', confidence: 0.66 },
+        ], null, 2),
+      },
+    },
+    {
+      label: 'LINE-05 — eWaste hazard',
+      values: {
+        line_id: 'LINE-05',
+        operator_notes: 'PCB cell handling; suspect leaking CRT.',
+        frame_events_json: JSON.stringify([
+          { ts: '15:40:02', object: 'crt_screen',    confidence: 0.95 },
+          { ts: '15:40:08', object: 'mercury_lamp',  confidence: 0.73 },
+          { ts: '15:40:11', object: 'pcb_board',     confidence: 0.91 },
+        ], null, 2),
+      },
+    },
+  ],
+
+  'throughput-forecast': [
+    {
+      label: 'LINE-01 — next 24 h container line',
+      values: {
+        line_id: 'LINE-01',
+        horizon_hours: 24,
+        context_notes: 'Two AM shifts staffed; commercial-heavy inbound forecast 78%.',
+        shift_history_json: JSON.stringify([
+          { hour_offset: -24, tph: 17.4, shift: 'A' }, { hour_offset: -16, tph: 16.9, shift: 'B' },
+          { hour_offset: -8,  tph: 18.1, shift: 'C' }, { hour_offset: 0,   tph: 17.8, shift: 'A' },
+        ], null, 2),
+      },
+    },
+    {
+      label: 'LINE-02 — fiber line, conveyor #14 limited',
+      values: {
+        line_id: 'LINE-02',
+        horizon_hours: 12,
+        context_notes: 'Conveyor #14 derated 30%; PM scheduled in 8h.',
+        shift_history_json: JSON.stringify([
+          { hour_offset: -8, tph: 14.1, shift: 'A' }, { hour_offset: 0, tph: 13.4, shift: 'B' },
+        ], null, 2),
+      },
+    },
+    {
+      label: 'LINE-03 — robotics arm headroom',
+      values: {
+        line_id: 'LINE-03',
+        horizon_hours: 24,
+        context_notes: 'Both arms running; spike expected during evening shift.',
+        shift_history_json: JSON.stringify([
+          { hour_offset: -24, tph: 9.2 }, { hour_offset: -16, tph: 10.4 },
+          { hour_offset: -8,  tph: 11.1 }, { hour_offset: 0,   tph: 10.7 },
+        ], null, 2),
+      },
+    },
+    {
+      label: 'Plant-wide weekend dip',
+      values: {
+        line_id: 'PLANT',
+        horizon_hours: 48,
+        context_notes: 'Saturday + Sunday volumes drop ~40%; only LINE-01 + LINE-03 run.',
+        shift_history_json: JSON.stringify([
+          { hour_offset: -48, tph: 42 }, { hour_offset: -24, tph: 38 }, { hour_offset: 0, tph: 24 },
+        ], null, 2),
+      },
+    },
+    {
+      label: 'Post-holiday surge',
+      values: {
+        line_id: 'PLANT',
+        horizon_hours: 36,
+        context_notes: 'First Monday after Memorial Day; expect 1.6× normal residential inbound.',
+        shift_history_json: JSON.stringify([
+          { hour_offset: -24, tph: 41 }, { hour_offset: -12, tph: 39 }, { hour_offset: 0, tph: 44 },
+        ], null, 2),
+      },
+    },
+  ],
+
+  'end-market-match': [
+    {
+      label: 'PET bale → bottle-grade flake mills',
+      values: {
+        bale_id: 'BAL-2026-0006',
+        commodity: 'PET',
+        weight_kg: 490,
+        grade: 'A',
+        contamination_pct: 2.1,
+        constraints_notes: 'Avoid export to Asia this month; rail logistics preferred.',
+      },
+    },
+    {
+      label: 'OCC bale → North American container mills',
+      values: {
+        bale_id: 'BAL-2026-0013',
+        commodity: 'OCC',
+        weight_kg: 710,
+        grade: 'A',
+        contamination_pct: 3.0,
+        constraints_notes: 'Need offtake within 7 days; truckload economics.',
+      },
+    },
+    {
+      label: 'HDPE-Natural bale → recycled HDPE pelletizers',
+      values: {
+        bale_id: 'BAL-2026-0002',
+        commodity: 'HDPE-Natural',
+        weight_kg: 510,
+        grade: 'A',
+        contamination_pct: 4.2,
+        constraints_notes: 'Buyer must accept ~4% color HDPE mixed in.',
+      },
+    },
+    {
+      label: 'Aluminum UBC bale → smelters / Novelis',
+      values: {
+        bale_id: 'BAL-2026-0015',
+        commodity: 'Aluminum UBC',
+        weight_kg: 390,
+        grade: 'B',
+        contamination_pct: 1.5,
+        constraints_notes: 'Density under 480 kg/m³ — needs buyer willing to accept low-density.',
+      },
+    },
+    {
+      label: 'Mixed Paper bale → flexible buyers (downgraded)',
+      values: {
+        bale_id: 'BAL-2026-0004',
+        commodity: 'Mixed Paper',
+        weight_kg: 650,
+        grade: 'C',
+        contamination_pct: 18,
+        constraints_notes: 'High OCC mix-in; only flexible recovered-fiber buyers fit.',
+      },
+    },
+  ],
+
+  'contamination-report-card': [
+    { label: 'City of Riverside — May 2026',  values: { municipality: 'City of Riverside',  period_days: 30, narrative_notes: 'Compare to last month; flag any hazardous spikes.' } },
+    { label: 'Town of Westmoor — May 2026',   values: { municipality: 'Town of Westmoor',   period_days: 30, narrative_notes: '' } },
+    { label: 'Lakeshore County — Q2 2026',    values: { municipality: 'Lakeshore County',   period_days: 90, narrative_notes: 'Aggregate quarter to date.' } },
+    { label: 'Coastal Region — 7 days',       values: { municipality: 'Coastal Region',     period_days: 7,  narrative_notes: 'Storm-week incident focus.' } },
+    { label: 'All municipalities — 30 days',  values: { municipality: '',                   period_days: 30, narrative_notes: 'Plant-wide rollup; rank by avg severity.' } },
+  ],
 };
 
 // GET /api/ai/samples?feature=<verb>
@@ -700,6 +890,121 @@ router.post('/scrap-market-brief', async (req, res) => {
     const result = await ai.scrapMarketBrief(focus || 'all', r.rows);
     await record('scrap-market-brief', { focus, prices_count: r.rows.length, recent_prices_notes }, result);
     res.json(result);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ──────────────────────────────────────────────────────────────
+// Pass 7 — backlog AI verbs
+// ──────────────────────────────────────────────────────────────
+
+// AI 17: Line-Camera Anomaly Narrator
+router.post('/line-camera-anomaly-narrate', async (req, res) => {
+  try {
+    let { line_id, frame_events, frame_events_json, operator_notes } = req.body || {};
+    let frames = frame_events;
+    if (!frames && frame_events_json) {
+      try { frames = JSON.parse(frame_events_json); } catch (_) { frames = []; }
+    }
+    if (!Array.isArray(frames)) frames = [];
+    const result = await ai.lineCameraAnomalyNarrate(line_id || '', frames, operator_notes || '');
+    await record('line-camera-anomaly-narrate', { line_id, frames_count: frames.length, operator_notes }, result);
+    res.json(result);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// AI 18: Throughput Forecast (dedicated time-series)
+router.post('/throughput-forecast', async (req, res) => {
+  try {
+    let { line_id, horizon_hours, shift_history, shift_history_json, context_notes } = req.body || {};
+    let hist = shift_history;
+    if (!hist && shift_history_json) {
+      try { hist = JSON.parse(shift_history_json); } catch (_) { hist = []; }
+    }
+    if (!hist || !Array.isArray(hist) || hist.length === 0) {
+      const r = await pool.query(
+        `SELECT line_id, throughput_tph, last_event, status FROM sortation_lines
+         WHERE ($1 = '' OR line_id = $1) ORDER BY line_id ASC LIMIT 20`,
+        [line_id || '']
+      );
+      hist = r.rows.map((row, i) => ({ hour_offset: -i * 4, tph: Number(row.throughput_tph || 0), source_line: row.line_id }));
+    }
+    const result = await ai.throughputForecast(line_id || 'PLANT', hist, Number(horizon_hours || 24), context_notes || '');
+    await record('throughput-forecast', { line_id, horizon_hours, history_count: hist.length, context_notes }, result);
+    res.json(result);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// AI 19: End-Market Matchmaker
+router.post('/end-market-match', async (req, res) => {
+  try {
+    const { bale_id, commodity, weight_kg, grade, contamination_pct, constraints_notes } = req.body || {};
+    const bale = {
+      bale_id: bale_id || 'BAL-UNKNOWN',
+      commodity: commodity || 'unknown',
+      weight_kg: weight_kg || 0,
+      grade: grade || '',
+      contamination_pct: contamination_pct || 0,
+    };
+    // Pull candidate buyer specs matching the commodity (or any if commodity is empty).
+    let specs = [];
+    try {
+      const r = await pool.query(
+        `SELECT bs.*, b.name AS buyer_name, b.country AS buyer_country, b.region AS buyer_region, b.certifications
+         FROM buyer_specs bs LEFT JOIN buyers b ON b.buyer_id = bs.buyer_id
+         WHERE ($1 = '' OR bs.commodity ILIKE $1)
+         ORDER BY bs.price_usd_ton DESC NULLS LAST LIMIT 20`,
+        [commodity ? `%${commodity}%` : '']
+      );
+      specs = r.rows;
+    } catch (_) { specs = []; }
+    const result = await ai.endMarketMatch(bale, specs, constraints_notes || '');
+    await record('end-market-match', { bale_id, commodity, specs_count: specs.length }, result);
+    res.json(result);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Per-municipality contamination report card (aggregation + AI narrative)
+router.post('/contamination-report-card', async (req, res) => {
+  try {
+    const { municipality, period_days, narrative_notes } = req.body || {};
+    const days = Math.max(1, Math.min(365, Number(period_days || 30)));
+    const muniFilter = municipality && String(municipality).trim() ? String(municipality).trim() : null;
+    const params = [days];
+    let where = `created_at >= NOW() - ($1 || ' days')::interval`;
+    if (muniFilter) {
+      params.push(muniFilter);
+      where += ` AND municipality = $${params.length}`;
+    }
+    const agg = await pool.query(
+      `SELECT
+         COALESCE(municipality, 'Unspecified') AS municipality,
+         COUNT(*) AS events,
+         COUNT(*) FILTER (WHERE severity = 'critical') AS critical,
+         COUNT(*) FILTER (WHERE severity = 'high')     AS high,
+         COUNT(*) FILTER (WHERE severity = 'medium')   AS medium,
+         COUNT(*) FILTER (WHERE severity = 'low')      AS low
+       FROM contamination_logs
+       WHERE ${where}
+       GROUP BY COALESCE(municipality, 'Unspecified')
+       ORDER BY events DESC`,
+      params
+    );
+    const topTypes = await pool.query(
+      `SELECT type, COUNT(*) AS cnt FROM contamination_logs
+       WHERE ${where} GROUP BY type ORDER BY cnt DESC LIMIT 10`,
+      params
+    );
+    const snapshot = {
+      scope: muniFilter || 'all municipalities',
+      period_days: days,
+      by_municipality: agg.rows,
+      top_contaminant_types: topTypes.rows,
+      narrative_notes: narrative_notes || '',
+    };
+    const result = await ai.executiveBrief(snapshot);
+    const out = { snapshot, report: result };
+    await record('contamination-report-card', { municipality: muniFilter, period_days: days }, out);
+    res.json(out);
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 

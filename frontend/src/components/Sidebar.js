@@ -66,6 +66,34 @@ const AI_REPORTING_LINKS = [
   { to: '/ai/regulatory-reporting',       label: 'AI · Regulatory Reporting' },
 ];
 
+// Pass 7 — backlog
+const SCALE_HOUSE_LINKS = [
+  { to: '/scale-tickets', label: 'Scale-House Tickets' },
+];
+
+const ROUTES_LINKS = [
+  { to: '/routes',      label: 'Hauler Routes' },
+  { to: '/route-stops', label: 'Route Stops' },
+];
+
+const ENDMARKET_LINKS = [
+  { to: '/buyers',      label: 'End-Market Buyers' },
+  { to: '/buyer-specs', label: 'Buyer Specs' },
+];
+
+const EPR_LINKS = [
+  { to: '/producers',       label: 'Producers' },
+  { to: '/sku-obligations', label: 'SKU Obligations' },
+  { to: '/epr-filings',     label: 'EPR Filings' },
+];
+
+const AI_BACKLOG_LINKS = [
+  { to: '/ai/line-camera-anomaly-narrate', label: 'AI · Camera Anomaly' },
+  { to: '/ai/throughput-forecast',         label: 'AI · Throughput Forecast' },
+  { to: '/ai/end-market-match',            label: 'AI · End-Market Match' },
+  { to: '/ai/contamination-report-card',   label: 'AI · Muni Report Card' },
+];
+
 export default function Sidebar() {
   const user = getStoredUser();
   return (
@@ -106,6 +134,21 @@ export default function Sidebar() {
 
       <div className="sidebar-group-label">AI Reporting</div>
       {AI_REPORTING_LINKS.map((l) => <NavLink key={l.to} to={l.to}>{l.label}</NavLink>)}
+
+      <div className="sidebar-group-label">Scale House</div>
+      {SCALE_HOUSE_LINKS.map((l) => <NavLink key={l.to} to={l.to}>{l.label}</NavLink>)}
+
+      <div className="sidebar-group-label">Hauler Routes</div>
+      {ROUTES_LINKS.map((l) => <NavLink key={l.to} to={l.to}>{l.label}</NavLink>)}
+
+      <div className="sidebar-group-label">End Markets</div>
+      {ENDMARKET_LINKS.map((l) => <NavLink key={l.to} to={l.to}>{l.label}</NavLink>)}
+
+      <div className="sidebar-group-label">EPR</div>
+      {EPR_LINKS.map((l) => <NavLink key={l.to} to={l.to}>{l.label}</NavLink>)}
+
+      <div className="sidebar-group-label">AI Backlog</div>
+      {AI_BACKLOG_LINKS.map((l) => <NavLink key={l.to} to={l.to}>{l.label}</NavLink>)}
 
       <div className="sidebar-group-label">Analytics</div>
       <NavLink to="/custom-views">MRF Analytics</NavLink>

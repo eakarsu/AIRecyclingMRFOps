@@ -91,6 +91,20 @@ app.use('/api/dashboard', require('./routes/dashboard'));
 // Custom analytics views
 app.use('/api/custom-views', require('./routes/customViews'));
 
+// ─────────────────────────────────────────────
+// Pass 7 — backlog CRUD entities
+// (EPR producers / SKU obligations / filings, scale-house tickets,
+//  hauler route persistence, end-market buyers + specs)
+// ─────────────────────────────────────────────
+app.use('/api/producers',       require('./routes/producers'));
+app.use('/api/sku-obligations', require('./routes/skuObligations'));
+app.use('/api/epr-filings',     require('./routes/eprFilings'));
+app.use('/api/scale-tickets',   require('./routes/scaleTickets'));
+app.use('/api/routes',          require('./routes/routes'));
+app.use('/api/route-stops',     require('./routes/routeStops'));
+app.use('/api/buyers',          require('./routes/buyers'));
+app.use('/api/buyer-specs',     require('./routes/buyerSpecs'));
+
 app.listen(PORT, () => {
   console.log(`\nAI Recycling MRF Ops API running on http://localhost:${PORT}\n`);
 });

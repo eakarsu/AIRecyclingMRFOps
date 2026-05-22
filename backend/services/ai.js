@@ -422,6 +422,77 @@ async function scrapMarketBrief(focus = '', recentPrices = []) {
   return safeJsonParse(r, { summary: typeof r === 'string' ? r : 'No response', movers: [] });
 }
 
+// ──────────────────────────────────────────────────────────────
+// AI 17: Line-Camera Anomaly Narrator (frame batch → narrative + severity)
+// ──────────────────────────────────────────────────────────────
+async function lineCameraAnomalyNarrate(lineId = '', frameEvents = [], operatorNotes = '') {
+  const sys = `${SYSTEM_PROMPT} You are narrating an anomaly burst captured by an MRF sortation-line camera (NIR / vision AI). ` +
+    `Frames are pre-labelled events from the vision system. Return strict JSON:
+{
+  "line_id": string,
+  "headline": string,
+  "narrative": string,
+  "anomalies": [{ "timestamp": string, "object": string, "hazard": "low"|"medium"|"high"|"critical", "share_of_window_pct": number, "narrative": string }],
+  "overall_severity": "low"|"medium"|"high"|"critical",
+  "recommended_actions": [string],
+  "operator_alert_message": string,
+  "downstream_impact": string,
+  "summary": string
+}`;
+  const usr = `Line: ${lineId}\nFrame events:\n${JSON.stringify(frameEvents, null, 2)}\nOperator notes: ${operatorNotes}`;
+  const r = await callOpenRouter(sys, usr);
+  return safeJsonParse(r, { summary: typeof r === 'string' ? r : 'No response', anomalies: [] });
+}
+
+// ──────────────────────────────────────────────────────────────
+// AI 18: Throughput Forecast (dedicated time-series predictor)
+// ──────────────────────────────────────────────────────────────
+async function throughputForecast(lineId = '', shiftHistory = [], horizonHours = 24, contextNotes = '') {
+  const sys = `${SYSTEM_PROMPT} Forecast hourly throughput (tons-per-hour) for a sortation line. Return strict JSON:
+{
+  "line_id": string,
+  "horizon_hours": number,
+  "baseline_tph": number,
+  "forecast": [{ "hour_offset": number, "tph": number, "confidence": number, "shift": string }],
+  "expected_total_tons": number,
+  "drivers": [{ "driver": string, "direction": "up"|"down"|"neutral", "narrative": string }],
+  "bottleneck_risk": "low"|"medium"|"high",
+  "staffing_recommendation": string,
+  "summary": string
+}`;
+  const usr = `Line: ${lineId}\nHorizon (hours): ${horizonHours}\nShift / historical throughput:\n${JSON.stringify(shiftHistory, null, 2)}\nContext: ${contextNotes}`;
+  const r = await callOpenRouter(sys, usr);
+  return safeJsonParse(r, { summary: typeof r === 'string' ? r : 'No response', forecast: [] });
+}
+
+// ──────────────────────────────────────────────────────────────
+// AI 19: End-Market Matchmaker (bale → buyer/mill)
+// ──────────────────────────────────────────────────────────────
+async function endMarketMatch(bale = {}, buyerSpecs = [], constraintsNotes = '') {
+  const sys = `${SYSTEM_PROMPT} Match a finished MRF bale to its best downstream buyer/mill based on spec fit and economics. Return strict JSON:
+{
+  "bale_id": string,
+  "commodity": string,
+  "ranked_matches": [{
+    "buyer": string,
+    "buyer_id": string,
+    "fit_score": number,
+    "spec_match_pct": number,
+    "expected_price_usd_ton": number,
+    "logistics_note": string,
+    "risks": [string],
+    "rationale": string
+  }],
+  "best_match": string,
+  "expected_revenue_usd": number,
+  "negotiation_points": [string],
+  "summary": string
+}`;
+  const usr = `Bale:\n${JSON.stringify(bale, null, 2)}\nCandidate buyer specs:\n${JSON.stringify(buyerSpecs, null, 2)}\nConstraints/notes: ${constraintsNotes}`;
+  const r = await callOpenRouter(sys, usr);
+  return safeJsonParse(r, { summary: typeof r === 'string' ? r : 'No response', ranked_matches: [] });
+}
+
 module.exports = {
   callOpenRouter,
   safeJsonParse,
@@ -441,4 +512,7 @@ module.exports = {
   baleQualityGrade,
   regulatoryReporting,
   scrapMarketBrief,
+  lineCameraAnomalyNarrate,
+  throughputForecast,
+  endMarketMatch,
 };

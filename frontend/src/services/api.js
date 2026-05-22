@@ -106,6 +106,16 @@ function crud(base) {
   };
 }
 
+// Pass 7 — backlog CRUD APIs
+export const producersApi        = crud('producers');
+export const skuObligationsApi   = crud('sku-obligations');
+export const eprFilingsApi       = crud('epr-filings');
+export const scaleTicketsApi     = crud('scale-tickets');
+export const routesApi           = crud('routes');
+export const routeStopsApi       = crud('route-stops');
+export const buyersApi           = crud('buyers');
+export const buyerSpecsApi       = crud('buyer-specs');
+
 // 18 MRF CRUD APIs
 export const balesApi             = crud('bales');
 export const loadsInApi           = crud('loads-in');
@@ -151,6 +161,12 @@ export const aiEquipmentPrognostic      = (body) => request('/ai/equipment-progn
 export const aiBaleQualityGrade         = (body) => request('/ai/bale-quality-grade',         { method: 'POST', body: JSON.stringify(body || {}) });
 export const aiRegulatoryReporting      = (body) => request('/ai/regulatory-reporting',       { method: 'POST', body: JSON.stringify(body || {}) });
 export const aiScrapMarketBrief         = (body) => request('/ai/scrap-market-brief',         { method: 'POST', body: JSON.stringify(body || {}) });
+
+// Pass 7 — backlog AI verbs
+export const aiLineCameraAnomalyNarrate = (body) => request('/ai/line-camera-anomaly-narrate', { method: 'POST', body: JSON.stringify(body || {}) });
+export const aiThroughputForecast       = (body) => request('/ai/throughput-forecast',         { method: 'POST', body: JSON.stringify(body || {}) });
+export const aiEndMarketMatch           = (body) => request('/ai/end-market-match',            { method: 'POST', body: JSON.stringify(body || {}) });
+export const aiContaminationReportCard  = (body) => request('/ai/contamination-report-card',   { method: 'POST', body: JSON.stringify(body || {}) });
 
 // AI history
 export const getAIHistory = (feature, limit = 25) => {
