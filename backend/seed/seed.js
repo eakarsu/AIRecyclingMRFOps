@@ -1,17 +1,21 @@
 const fs = require('fs');
 const path = require('path');
 const { Pool } = require('pg');
+const crypto = require('crypto');
 require('dotenv').config({ path: path.join(__dirname, '..', '..', '.env') });
 
 const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 5432,
-  database: process.env.DB_NAME || 'recycling_mrf',
-  user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'postgres',
+  connectionString: process.env.DATABASE_URL,
 });
 
+function seedHash(password) {
+  const salt = crypto.randomBytes(16).toString('hex');
+  return `scrypt$${salt}$${crypto.scryptSync(password, salt, 64).toString('hex')}`;
+}
+
 async function run() {
+  if (process.env.ALLOW_DESTRUCTIVE_SEED !== '1') throw new Error('Set ALLOW_DESTRUCTIVE_SEED=1 only for an isolated demo database');
+  for (const key of ['SEED_ADMIN_PASSWORD', 'SEED_STAFF_PASSWORD', 'SEED_VIEWER_PASSWORD']) if ((process.env[key] || '').length < 12) throw new Error(`${key} must contain at least 12 characters`);
   const client = await pool.connect();
   try {
     console.log('[seed] resetting tables...');
@@ -66,9 +70,9 @@ async function run() {
     // ─────────────────────────────────────────────
     console.log('[seed] inserting users...');
     const users = [
-      ['admin@mrf.io',   'admin123',  'MRF Administrator', 'admin'],
-      ['ops@mrf.io',     'ops123',    'Operations Lead',   'ops'],
-      ['viewer@mrf.io',  'viewer123', 'Read-only Viewer',  'viewer'],
+      ['admin@mrf.io',   seedHash(process.env.SEED_ADMIN_PASSWORD),  'MRF Administrator', 'admin'],
+      ['ops@mrf.io',     seedHash(process.env.SEED_STAFF_PASSWORD),  'Operations Lead',   'ops'],
+      ['viewer@mrf.io',  seedHash(process.env.SEED_VIEWER_PASSWORD), 'Read-only Viewer',  'viewer'],
     ];
     for (const u of users) {
       await client.query(
@@ -510,8 +514,8 @@ async function run() {
     // ─────────────────────────────────────────────
     console.log('[seed] inserting webhooks...');
     const webhooks = [
-      ['MRF Ops Notifier', 'https://httpbin.org/post', 'sec_mrf_ops_2026',  'load.flagged,contamination.critical,safety.opened', true],
-      ['Customer Quality', 'https://httpbin.org/post', 'sec_mrf_cust_2026', 'bale.shipped,bale.rejected',                        true],
+      ['MRF Ops Notifier', 'https://invalid.local/demo', 'secret-ref://disabled-demo', 'load.flagged,contamination.critical,safety.opened', false],
+      ['Customer Quality', 'https://invalid.local/demo', 'secret-ref://disabled-demo', 'bale.shipped,bale.rejected', false],
     ];
     for (const w of webhooks) {
       await client.query(

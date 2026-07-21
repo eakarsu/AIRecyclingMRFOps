@@ -28,6 +28,7 @@ async function onContaminationCreated(row) {
 
 const app = express();
 const PORT = process.env.BACKEND_PORT || 3083;
+if ((process.env.JWT_SECRET || '').length < 32 || !process.env.GOVERNANCE_TENANT_ID || !process.env.DATABASE_URL) throw new Error('JWT_SECRET (32+ characters), GOVERNANCE_TENANT_ID, and DATABASE_URL are required');
 
 // Middleware
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
@@ -78,12 +79,12 @@ app.use('/api/contracts',          require('./routes/contracts'));
 app.use('/api/audit-log',          require('./routes/auditLog'));
 
 // AI routes (16 sub-endpoints + history under /api/ai)
-app.use('/api/ai', require('./routes/ai'));
+if (process.env.ENABLE_GENERATED_ROUTES === 'true' && process.env.NODE_ENV !== 'production') app.use('/api/ai', require('./routes/ai'));
 
 // Cross-cutting
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/attachments',   require('./routes/attachments'));
-app.use('/api/webhooks',      require('./routes/webhooks'));
+if (process.env.ENABLE_GENERATED_ROUTES === 'true' && process.env.NODE_ENV !== 'production') app.use('/api/webhooks', require('./routes/webhooks'));
 
 // Dashboard stats
 app.use('/api/dashboard', require('./routes/dashboard'));
@@ -104,6 +105,7 @@ app.use('/api/routes',          require('./routes/routes'));
 app.use('/api/route-stops',     require('./routes/routeStops'));
 app.use('/api/buyers',          require('./routes/buyers'));
 app.use('/api/buyer-specs',     require('./routes/buyerSpecs'));
+app.use('/api/governed-mrf-operations', require('./governance'));
 
 app.listen(PORT, () => {
   console.log(`\nAI Recycling MRF Ops API running on http://localhost:${PORT}\n`);

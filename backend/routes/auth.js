@@ -3,30 +3,24 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET, authenticateToken } = require('../middleware/auth');
 const pool = require('../config/database');
+const crypto = require('crypto');
 
-// Fallback demo admin used when the users table is unavailable
-// (e.g. before the v2 migration is applied). Never overwritten anywhere.
-const DEMO_USER = {
-  id: 1,
-  email: 'admin@mrf.io',
-  password: 'admin123',
-  name: 'MRF Administrator',
-  role: 'admin',
-};
+function verifyPassword(password, encoded) {
+  const [scheme, salt, expectedHex] = String(encoded || '').split('$');
+  if (scheme !== 'scrypt' || !salt || !/^[0-9a-f]{128}$/i.test(expectedHex || '')) return false;
+  const actual = crypto.scryptSync(password, salt, 64);
+  return crypto.timingSafeEqual(actual, Buffer.from(expectedHex, 'hex'));
+}
 
 async function findDbUser(email, password) {
-  try {
-    const r = await pool.query(
+  const r = await pool.query(
       'SELECT id, email, password, name, role FROM users WHERE email = $1 LIMIT 1',
       [email]
     );
     if (!r.rows.length) return null;
     const u = r.rows[0];
-    if (u.password !== password) return null;
+    if (!verifyPassword(password, u.password)) return null;
     return { id: u.id, email: u.email, name: u.name, role: u.role };
-  } catch (e) {
-    return null;
-  }
 }
 
 // POST /api/auth/login
@@ -37,25 +31,13 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'email and password are required' });
     }
 
-    let user = await findDbUser(email, password);
-
-    if (!user) {
-      // Hardcoded demo admin still works even if users table missing
-      if (email === DEMO_USER.email && password === DEMO_USER.password) {
-        user = {
-          id: DEMO_USER.id,
-          email: DEMO_USER.email,
-          name: DEMO_USER.name,
-          role: DEMO_USER.role,
-        };
-      }
-    }
+    const user = await findDbUser(email, password);
 
     if (!user) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    const token = jwt.sign(user, JWT_SECRET, { expiresIn: '24h' });
+    const token = jwt.sign({ ...user, tenantId: process.env.GOVERNANCE_TENANT_ID, subjectIds: [`actor:user:${user.id}`] }, JWT_SECRET, { algorithm: 'HS256', expiresIn: '24h' });
     res.json({ token, user });
   } catch (e) {
     console.error('Login error:', e);
