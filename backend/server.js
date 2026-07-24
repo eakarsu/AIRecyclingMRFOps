@@ -79,7 +79,7 @@ app.use('/api/contracts',          require('./routes/contracts'));
 app.use('/api/audit-log',          require('./routes/auditLog'));
 
 // AI routes (16 sub-endpoints + history under /api/ai)
-if (process.env.ENABLE_GENERATED_ROUTES === 'true' && process.env.NODE_ENV !== 'production') app.use('/api/ai', require('./routes/ai'));
+app.use('/api/ai', require('./routes/ai'));
 
 // Cross-cutting
 app.use('/api/notifications', require('./routes/notifications'));
