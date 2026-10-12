@@ -14,7 +14,7 @@ export default function AIRoutePickupOptimizePage() {
         { key: 'stops_json',  label: 'Stops (JSON array)', type: 'textarea',
           placeholder: '[{"id":"S-01","address":"1200 Lakeshore Dr","est_tons":1.2}, ...]' },
       ]}
-      run={(v) => aiRoutePickupOptimize(v)}
+      run={(v, requestOptions) => aiRoutePickupOptimize(v, requestOptions)}
       buttonLabel="Optimize Routes"
     />
   );

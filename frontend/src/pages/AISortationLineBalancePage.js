@@ -12,7 +12,7 @@ export default function AISortationLineBalancePage() {
         { key: 'inbound_mix_json', label: 'Inbound Mix (JSON)', type: 'textarea',
           placeholder: '{"PET":0.18,"HDPE":0.07,"OCC":0.42,"MP":0.14,"Aluminum":0.03,"Steel":0.05,"Residual":0.11}' },
       ]}
-      run={(v) => aiSortationLineBalance({ inbound_mix_json: v.inbound_mix_json })}
+      run={(v, requestOptions) => aiSortationLineBalance({ inbound_mix_json: v.inbound_mix_json }, requestOptions)}
       buttonLabel="Balance Lines"
     />
   );

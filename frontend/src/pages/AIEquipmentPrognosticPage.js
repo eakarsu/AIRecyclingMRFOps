@@ -9,7 +9,7 @@ export default function AIEquipmentPrognosticPage() {
       feature="equipment-prognostic"
       subtitle="Predict component failures across plant equipment."
       inputs={[]}
-      run={() => aiEquipmentPrognostic({})}
+      run={(_values, requestOptions) => aiEquipmentPrognostic({}, requestOptions)}
       buttonLabel="Run Prognostic"
     />
   );

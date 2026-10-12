@@ -9,7 +9,7 @@ export default function AISafetyIncidentSummaryPage() {
       feature="safety-incident-summary"
       subtitle="Daily safety stand-up summary across open + closed incidents."
       inputs={[]}
-      run={() => aiSafetyIncidentSummary({})}
+      run={(_values, requestOptions) => aiSafetyIncidentSummary({}, requestOptions)}
       buttonLabel="Summarize Safety"
     />
   );

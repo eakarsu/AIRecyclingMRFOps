@@ -12,7 +12,7 @@ export default function AICapacityUtilizationBriefPage() {
         { key: 'targets_notes', label: 'Targets / context', type: 'textarea',
           placeholder: 'Optional — utilization targets, customer commits, time window.' },
       ]}
-      run={(v) => aiCapacityUtilizationBrief({ targets_notes: v.targets_notes })}
+      run={(v, requestOptions) => aiCapacityUtilizationBrief({ targets_notes: v.targets_notes }, requestOptions)}
       buttonLabel="Generate Capacity Brief"
     />
   );

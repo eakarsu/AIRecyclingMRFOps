@@ -12,7 +12,7 @@ export default function AIExecutiveBriefPage() {
         { key: 'notes', label: 'Optional bias notes', type: 'textarea',
           placeholder: 'e.g. Bias the brief toward downtime / quality / safety.' },
       ]}
-      run={(v) => aiExecutiveBrief({ notes: v.notes })}
+      run={(v, requestOptions) => aiExecutiveBrief({ notes: v.notes }, requestOptions)}
       buttonLabel="Generate Brief"
     />
   );

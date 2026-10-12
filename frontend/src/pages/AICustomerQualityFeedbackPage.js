@@ -14,7 +14,7 @@ export default function AICustomerQualityFeedbackPage() {
         { key: 'complaint_text',     label: 'Complaint Text', type: 'textarea',
           placeholder: 'Paste the customer email or summarized issue here.' },
       ]}
-      run={(v) => aiCustomerQualityFeedback(v)}
+      run={(v, requestOptions) => aiCustomerQualityFeedback(v, requestOptions)}
       buttonLabel="Draft Response"
     />
   );

@@ -84,7 +84,7 @@ app.use('/api/ai', require('./routes/ai'));
 // Cross-cutting
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/attachments',   require('./routes/attachments'));
-if (process.env.ENABLE_GENERATED_ROUTES === 'true' && process.env.NODE_ENV !== 'production') app.use('/api/webhooks', require('./routes/webhooks'));
+if ((process.env.ENABLE_GENERATED_ROUTES || 'true') === 'true' && process.env.NODE_ENV !== 'production') app.use('/api/webhooks', require('./routes/webhooks'));
 
 // Dashboard stats
 app.use('/api/dashboard', require('./routes/dashboard'));

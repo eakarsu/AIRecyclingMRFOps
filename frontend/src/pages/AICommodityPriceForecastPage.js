@@ -14,11 +14,11 @@ export default function AICommodityPriceForecastPage() {
         { key: 'recent_prices_json', label: 'Recent prices (JSON, optional)', type: 'textarea',
           placeholder: '[{"day": -7, "usd_ton": 332}, {"day": 0, "usd_ton": 335}]' },
       ]}
-      run={(v) => aiCommodityPriceForecast({
+      run={(v, requestOptions) => aiCommodityPriceForecast({
         commodity: v.commodity,
         horizon_days: Number(v.horizon_days) || 30,
         recent_prices_json: v.recent_prices_json,
-      })}
+      }, requestOptions)}
       buttonLabel="Forecast Price"
     />
   );

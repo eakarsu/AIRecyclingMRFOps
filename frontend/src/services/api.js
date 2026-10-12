@@ -1,7 +1,11 @@
-const API_BASE =
+const configuredApiBase =
   (typeof window !== 'undefined' && window.__API_BASE__) ||
   process.env.REACT_APP_API_BASE_URL ||
+  process.env.REACT_APP_API_URL ||
   'http://localhost:3083/api';
+
+// Accept either a bare origin (http://host:port) or an origin already ending in /api.
+const API_BASE = configuredApiBase.replace(/\/+$/, '').replace(/\/api$/, '') + '/api';
 
 export { API_BASE };
 
@@ -80,7 +84,7 @@ async function request(url, options = {}) {
 // Generic CRUD factory
 function crud(base) {
   return {
-    list:   ()       => request(`/${base}`),
+    list:   (options = {}) => request(`/${base}`, options),
     get:    (id)     => request(`/${base}/${id}`),
     create: (data)   => request(`/${base}`, { method: 'POST', body: JSON.stringify(data) }),
     update: (id, d)  => request(`/${base}/${id}`, { method: 'PUT',  body: JSON.stringify(d) }),
@@ -146,28 +150,28 @@ export const login = (email, password) =>
 export const getMe = () => request('/auth/me');
 
 // AI endpoints — 16 MRF verbs
-export const aiContaminationVisionScore = (body) => request('/ai/contamination-vision-score', { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiCommodityPriceForecast   = (body) => request('/ai/commodity-price-forecast',   { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiSortationLineBalance     = (body) => request('/ai/sortation-line-balance',     { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiDowntimeRCA              = (body) => request('/ai/downtime-rca',               { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiExecutiveBrief           = (body) => request('/ai/executive-brief',            { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiCustomerQualityFeedback  = (body) => request('/ai/customer-quality-feedback',  { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiVendorQuoteCompare       = (body) => request('/ai/vendor-quote-compare',       { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiRoutePickupOptimize      = (body) => request('/ai/route-pickup-optimize',      { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiSafetyIncidentSummary    = (body) => request('/ai/safety-incident-summary',    { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiTrainingNeeds            = (body) => request('/ai/training-needs',             { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiHaulerPaymentRecon       = (body) => request('/ai/hauler-payment-recon',       { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiCapacityUtilizationBrief = (body) => request('/ai/capacity-utilization-brief', { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiEquipmentPrognostic      = (body) => request('/ai/equipment-prognostic',       { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiBaleQualityGrade         = (body) => request('/ai/bale-quality-grade',         { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiRegulatoryReporting      = (body) => request('/ai/regulatory-reporting',       { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiScrapMarketBrief         = (body) => request('/ai/scrap-market-brief',         { method: 'POST', body: JSON.stringify(body || {}) });
+export const aiContaminationVisionScore = (body, options = {}) => request('/ai/contamination-vision-score', { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiCommodityPriceForecast   = (body, options = {}) => request('/ai/commodity-price-forecast',   { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiSortationLineBalance     = (body, options = {}) => request('/ai/sortation-line-balance',     { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiDowntimeRCA              = (body, options = {}) => request('/ai/downtime-rca',               { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiExecutiveBrief           = (body, options = {}) => request('/ai/executive-brief',            { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiCustomerQualityFeedback  = (body, options = {}) => request('/ai/customer-quality-feedback',  { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiVendorQuoteCompare       = (body, options = {}) => request('/ai/vendor-quote-compare',       { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiRoutePickupOptimize      = (body, options = {}) => request('/ai/route-pickup-optimize',      { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiSafetyIncidentSummary    = (body, options = {}) => request('/ai/safety-incident-summary',    { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiTrainingNeeds            = (body, options = {}) => request('/ai/training-needs',             { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiHaulerPaymentRecon       = (body, options = {}) => request('/ai/hauler-payment-recon',       { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiCapacityUtilizationBrief = (body, options = {}) => request('/ai/capacity-utilization-brief', { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiEquipmentPrognostic      = (body, options = {}) => request('/ai/equipment-prognostic',       { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiBaleQualityGrade         = (body, options = {}) => request('/ai/bale-quality-grade',         { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiRegulatoryReporting      = (body, options = {}) => request('/ai/regulatory-reporting',       { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiScrapMarketBrief         = (body, options = {}) => request('/ai/scrap-market-brief',         { ...options, method: 'POST', body: JSON.stringify(body || {}) });
 
 // Pass 7 — backlog AI verbs
-export const aiLineCameraAnomalyNarrate = (body) => request('/ai/line-camera-anomaly-narrate', { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiThroughputForecast       = (body) => request('/ai/throughput-forecast',         { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiEndMarketMatch           = (body) => request('/ai/end-market-match',            { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiContaminationReportCard  = (body) => request('/ai/contamination-report-card',   { method: 'POST', body: JSON.stringify(body || {}) });
+export const aiLineCameraAnomalyNarrate = (body, options = {}) => request('/ai/line-camera-anomaly-narrate', { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiThroughputForecast       = (body, options = {}) => request('/ai/throughput-forecast',         { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiEndMarketMatch           = (body, options = {}) => request('/ai/end-market-match',            { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiContaminationReportCard  = (body, options = {}) => request('/ai/contamination-report-card',   { ...options, method: 'POST', body: JSON.stringify(body || {}) });
 
 // AI history
 export const getAIHistory = (feature, limit = 25) => {

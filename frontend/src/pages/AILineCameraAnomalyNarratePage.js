@@ -15,7 +15,7 @@ export default function AILineCameraAnomalyNarratePage() {
         { key: 'frame_events_json', label: 'Frame Events (JSON array)', type: 'textarea',
           placeholder: '[ { "ts": "07:14:30", "object": "lithium_ion_cell", "confidence": 0.96 }, … ]' },
       ]}
-      run={(v) => aiLineCameraAnomalyNarrate(v)}
+      run={(v, requestOptions) => aiLineCameraAnomalyNarrate(v, requestOptions)}
       buttonLabel="Narrate Anomaly"
     />
   );

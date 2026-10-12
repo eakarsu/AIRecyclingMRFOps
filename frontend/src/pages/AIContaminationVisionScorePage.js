@@ -14,7 +14,7 @@ export default function AIContaminationVisionScorePage() {
         { key: 'sample_notes',     label: 'Inspector / Sample Notes', type: 'textarea',
           placeholder: 'Free-form: hazards spotted, recovery audit picks, AMP cam tags, etc.' },
       ]}
-      run={(v) => aiContaminationVisionScore(v)}
+      run={(v, requestOptions) => aiContaminationVisionScore(v, requestOptions)}
       buttonLabel="Score Contamination"
     />
   );

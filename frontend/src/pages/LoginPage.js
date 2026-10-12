@@ -4,8 +4,8 @@ import { login, setToken, setStoredUser } from '../services/api';
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('admin@mrf.io');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -56,20 +56,20 @@ export default function LoginPage() {
 
         <button
           type="button"
-          onClick={() => { setEmail(process.env.REACT_APP_DEMO_EMAIL || ''); setPassword(process.env.REACT_APP_DEMO_PASSWORD || ''); }}
-          disabled={!process.env.REACT_APP_DEMO_EMAIL || !process.env.REACT_APP_DEMO_PASSWORD}
-          aria-label="Auto Fill Demo Credentials"
+          onClick={() => { setEmail(process.env.REACT_APP_DEMO_EMAIL || ''); setPassword(process.env.REACT_APP_DEMO_PASSWORD || ''); setError(null); }}
+          disabled={loading || !process.env.REACT_APP_DEMO_EMAIL || !process.env.REACT_APP_DEMO_PASSWORD}
+          aria-label="Fill Demo Credentials"
           style={{ width: '100%', marginBottom: '12px', padding: '10px 14px', borderRadius: '8px', border: '1px solid currentColor', background: 'transparent', cursor: 'pointer' }}
         >
-          Auto Fill Demo Credentials
+          Fill Demo Credentials
         </button>
         <button className="btn" type="submit" disabled={loading} style={{ width: '100%' }}>
           {loading ? <><span className="spinner" />Authenticating...</> : 'Sign In'}
         </button>
 
-        <p className="login-hint">
-          Demo: <code>admin@mrf.io</code> / <code>admin123</code> · <code>ops@mrf.io</code> / <code>ops123</code> · <code>viewer@mrf.io</code> / <code>viewer123</code>
-        </p>
+        {(!process.env.REACT_APP_DEMO_EMAIL || !process.env.REACT_APP_DEMO_PASSWORD) && (
+          <p className="login-hint">Demo autofill is unavailable until a demo email and password are configured for this frontend.</p>
+        )}
       </form>
     </div>
   );

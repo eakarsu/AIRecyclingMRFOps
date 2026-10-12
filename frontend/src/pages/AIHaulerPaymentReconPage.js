@@ -12,7 +12,7 @@ export default function AIHaulerPaymentReconPage() {
         { key: 'invoice_text', label: 'Invoice Text', type: 'textarea',
           placeholder: 'Paste the hauler invoice text here.' },
       ]}
-      run={(v) => aiHaulerPaymentRecon(v)}
+      run={(v, requestOptions) => aiHaulerPaymentRecon(v, requestOptions)}
       buttonLabel="Reconcile Invoice"
     />
   );

@@ -14,7 +14,7 @@ export default function AIContaminationReportCardPage() {
         { key: 'narrative_notes',  label: 'Narrative Notes', type: 'textarea',
           placeholder: 'Special framing — trends, incidents, contract context, etc.' },
       ]}
-      run={(v) => aiContaminationReportCard(v)}
+      run={(v, requestOptions) => aiContaminationReportCard(v, requestOptions)}
       buttonLabel="Generate Report Card"
     />
   );

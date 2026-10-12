@@ -12,7 +12,7 @@ export default function AIDowntimeRCAPage() {
         { key: 'context_notes', label: 'Context / Bias notes', type: 'textarea',
           placeholder: 'Optional — focus on a specific line, equipment, or shift.' },
       ]}
-      run={(v) => aiDowntimeRCA({ context_notes: v.context_notes })}
+      run={(v, requestOptions) => aiDowntimeRCA({ context_notes: v.context_notes }, requestOptions)}
       buttonLabel="Run RCA"
     />
   );

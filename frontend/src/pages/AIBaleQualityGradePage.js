@@ -15,7 +15,7 @@ export default function AIBaleQualityGradePage() {
         { key: 'inspection_notes', label: 'Inspection Notes', type: 'textarea',
           placeholder: 'Free-form: moisture, contaminants, density, baler issues, etc.' },
       ]}
-      run={(v) => aiBaleQualityGrade(v)}
+      run={(v, requestOptions) => aiBaleQualityGrade(v, requestOptions)}
       buttonLabel="Grade Bale"
     />
   );

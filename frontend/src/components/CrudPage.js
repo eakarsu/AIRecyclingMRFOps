@@ -1,5 +1,7 @@
+import RecordDialog from './RecordDialog';
+import { AIResultValue } from './AIResultView';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { canWrite } from '../services/api';
+import { canWrite, API_BASE } from '../services/api';
 
 /**
  * Generic CRUD page.
@@ -30,6 +32,7 @@ export default function CrudPage({ title, subtitle, api, fields, statusKey, allo
   const [draft, setDraft] = useState({});
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
+  const [viewing, setViewing] = useState(null);
 
   // attachments panel state
   const [attachRow, setAttachRow] = useState(null);
@@ -52,7 +55,9 @@ export default function CrudPage({ title, subtitle, api, fields, statusKey, allo
     setErr(null);
     try {
       const data = await api.list();
-      setRows(Array.isArray(data) ? data : []);
+      const records = Array.isArray(data) ? data : data?.data;
+      if (!Array.isArray(records)) throw new Error('Record API returned an invalid list');
+      setRows(records);
     } catch (e) {
       setErr(e.message);
     } finally {
@@ -242,9 +247,9 @@ export default function CrudPage({ title, subtitle, api, fields, statusKey, allo
               </thead>
               <tbody>
                 {pagedRows.map((row) => (
-                  <tr key={row.id}>
+                  <tr key={row.id} className="sr-clickable-row" tabIndex={0} onClick={() => setViewing(row)} onKeyDown={(event) => { if ((event.key === 'Enter' || event.key === ' ') && event.target === event.currentTarget) { event.preventDefault(); setViewing(row); } }}>
                     {fields.map((f) => <td key={f.key}>{renderCell(row, f)}</td>)}
-                    <td style={{ textAlign: 'right' }}>
+                    <td style={{ textAlign: 'right' }} onClick={(event) => event.stopPropagation()}>
                       {allowAttachments && (
                         <button className="btn secondary" onClick={() => openAttachments(row)} style={{ marginRight: 6 }}>
                           Files
@@ -272,6 +277,8 @@ export default function CrudPage({ title, subtitle, api, fields, statusKey, allo
           )}
         </>
       )}
+
+      {viewing && <RecordDialog title={title + ' · Details'} onClose={() => setViewing(null)}><div className="form-grid">{fields.map((field) => <div className="form-group" key={field.key}><label>{field.label}</label><AIResultValue value={viewing[field.key]} /></div>)}</div><div className="sr-actions">{allowAttachments && <button type="button" className="btn secondary" onClick={() => { const row = viewing; setViewing(null); openAttachments(row); }}>Files</button>}{writer && <><button type="button" className="btn" onClick={() => { const row = viewing; setViewing(null); openEdit(row); }}>Edit</button><button type="button" className="btn danger" onClick={() => { const row = viewing; setViewing(null); handleDelete(row); }}>Delete</button></>}</div></RecordDialog>}
 
       {(creating || editing) && (
         <div className="modal-overlay" onClick={closeModal}>
@@ -386,7 +393,7 @@ export default function CrudPage({ title, subtitle, api, fields, statusKey, allo
                         </span>
                       </span>
                       <a
-                        href={`${process.env.REACT_APP_API_BASE || 'http://localhost:3083/api'}/attachments/${a.id}/download`}
+                        href={`${API_BASE}/attachments/${a.id}/download`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn secondary"

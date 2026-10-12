@@ -16,7 +16,7 @@ export default function AIThroughputForecastPage() {
         { key: 'shift_history_json', label: 'Shift History (JSON array)', type: 'textarea',
           placeholder: '[ { "hour_offset": -24, "tph": 17.4, "shift": "A" }, … ]' },
       ]}
-      run={(v) => aiThroughputForecast(v)}
+      run={(v, requestOptions) => aiThroughputForecast(v, requestOptions)}
       buttonLabel="Forecast Throughput"
     />
   );

@@ -13,7 +13,7 @@ export default function AIRegulatoryReportingPage() {
         { key: 'narrative_notes', label: 'Narrative notes',  type: 'textarea',
           placeholder: 'Optional emphasis: diversion rate, contamination trend, incidents, etc.' },
       ]}
-      run={(v) => aiRegulatoryReporting(v)}
+      run={(v, requestOptions) => aiRegulatoryReporting(v, requestOptions)}
       buttonLabel="Generate Report"
     />
   );

@@ -14,7 +14,7 @@ export default function AIVendorQuoteComparePage() {
         { key: 'quotes_json', label: 'Quotes (JSON array)', type: 'textarea',
           placeholder: '[{"vendor":"TOMRA","price_usd":685000,"lead_time_weeks":14, ...}, ...]' },
       ]}
-      run={(v) => aiVendorQuoteCompare(v)}
+      run={(v, requestOptions) => aiVendorQuoteCompare(v, requestOptions)}
       buttonLabel="Compare Quotes"
     />
   );

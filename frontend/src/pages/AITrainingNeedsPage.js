@@ -9,7 +9,7 @@ export default function AITrainingNeedsPage() {
       feature="training-needs"
       subtitle="Identify operator gaps and propose a curriculum."
       inputs={[]}
-      run={() => aiTrainingNeeds({})}
+      run={(_values, requestOptions) => aiTrainingNeeds({}, requestOptions)}
       buttonLabel="Analyze Training"
     />
   );

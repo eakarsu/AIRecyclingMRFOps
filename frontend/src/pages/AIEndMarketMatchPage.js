@@ -17,7 +17,7 @@ export default function AIEndMarketMatchPage() {
         { key: 'constraints_notes', label: 'Constraints / Notes', type: 'textarea',
           placeholder: 'Logistics, regional preferences, certifications required, etc.' },
       ]}
-      run={(v) => aiEndMarketMatch(v)}
+      run={(v, requestOptions) => aiEndMarketMatch(v, requestOptions)}
       buttonLabel="Match Bale"
     />
   );

@@ -13,7 +13,7 @@ export default function AIScrapMarketBriefPage() {
         { key: 'recent_prices_notes',  label: 'Context notes', type: 'textarea',
           placeholder: 'Optional — anything to bias the brief toward.' },
       ]}
-      run={(v) => aiScrapMarketBrief(v)}
+      run={(v, requestOptions) => aiScrapMarketBrief(v, requestOptions)}
       buttonLabel="Generate Market Brief"
     />
   );
