@@ -106,6 +106,7 @@ app.use('/api/route-stops',     require('./routes/routeStops'));
 app.use('/api/buyers',          require('./routes/buyers'));
 app.use('/api/buyer-specs',     require('./routes/buyerSpecs'));
 app.use('/api/governed-mrf-operations', require('./governance'));
+app.use('/api', require('./routes/featurePack'));
 
 app.listen(PORT, () => {
   console.log(`\nAI Recycling MRF Ops API running on http://localhost:${PORT}\n`);

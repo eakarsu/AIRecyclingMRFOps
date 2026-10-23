@@ -39,7 +39,23 @@ function buildCrud({ table, fields, idPrefix = '', webhookPrefix = null }) {
 
   router.get('/', async (req, res) => {
     try {
-      const r = await pool.query(`SELECT * FROM ${table} ORDER BY id DESC`);
+      // Optional search/filter: ?search= matches any field as text, and any
+      // ?<field>=<value> query param matching a known field filters exactly.
+      // With no query params the behaviour is unchanged.
+      const params = [];
+      const clauses = [];
+      const search = typeof req.query.search === 'string' ? req.query.search.trim() : '';
+      if (search) {
+        params.push(`%${search}%`);
+        clauses.push(`(${fields.map((f) => `CAST(${f} AS TEXT) ILIKE $1`).join(' OR ')})`);
+      }
+      for (const key of Object.keys(req.query || {})) {
+        if (key === 'search' || !fields.includes(key)) continue;
+        params.push(req.query[key]);
+        clauses.push(`${key} = $${params.length}`);
+      }
+      const where = clauses.length ? ` WHERE ${clauses.join(' AND ')}` : '';
+      const r = await pool.query(`SELECT * FROM ${table}${where} ORDER BY id DESC`, params);
       res.json(r.rows);
     } catch (e) { res.status(500).json({ error: e.message }); }
   });
